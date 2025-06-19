@@ -1,6 +1,6 @@
 [submodule "wine"]
 	path = wine
-	url = https://gitlab.winehq.org/wine/wine-staging.git
+	url = https://github.com/ValveSoftware/wine
 [submodule "wine-staging"]
 	path = wine-staging
 	url = https://gitlab.winehq.org/wine/wine-staging.git
