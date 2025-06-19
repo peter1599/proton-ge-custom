@@ -17,7 +17,7 @@ diff --git a/Makefile.in b/Makefile.in
 index 99ee8752b..ed2b33634 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -57,7 +57,11 @@ CROSSLDFLAGS   += -Wl,--file-alignment,4096
+@@ -57,7 +57,12 @@ CROSSLDFLAGS   += -Wl,--file-alignment,4096
 -CFLAGS  = -O2 -fwrapv -fno-strict-aliasing
 -CFLAGS += -ggdb -ffunction-sections -fdata-sections -fno-omit-frame-pointer
 -CFLAGS += -ffile-prefix-map=$(CCACHE_BASEDIR)=.
@@ -28,4 +28,4 @@ index 99ee8752b..ed2b33634 100644
 +COMMON_FLAGS32 := -mstackrealign
 +COMMON_FLAGS64 := -mcmodel=small
 +CFLAGS := $(COMMON_FLAGS)
- CARGO_BUILD_ARGS += --release
++CARGO_BUILD_ARGS += --release
