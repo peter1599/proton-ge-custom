@@ -10,8 +10,8 @@ flags and add the strip flag afterwards.
 
 fixes: CachyOS/proton-cachyos#18
 ---
- Makefile.in | 10 ++++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ Makefile.in | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
 index 99ee8752b..ed2b33634 100644
