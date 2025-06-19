@@ -293,6 +293,9 @@
     patch -Np1 < ../patches/proton/dualsense/0002-containerid-helper-to-generate-a-containerid-from-a-.patch
     patch -Np1 < ../patches/proton/dualsense/0003-Implement-SetupDiGetDeviceInterfacePropertyW-for-DEV.patch
 
+    echo "WINE: -CUSTOM- wine ntsync"
+    patch -Np1 < ../patches/wine-hotfixes/proton10-ntsync.patch
+
     echo "WINE: -CUSTOM- wine wayland"
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0001-use-surfaceless-for-GST.patch
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0002-winewayland-Enable-disable-the-zwp_text_input_v3-obj.patch
