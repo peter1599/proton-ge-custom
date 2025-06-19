@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build
+  checkout:
+    name: Checkout
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -12,7 +12,10 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - name: Build
-        uses: ./.github/workflows/build.yml
-        with:
-          name: devel
+
+  build:
+    needs: checkout
+    name: Build
+    uses: ./.github/workflows/build.yml
+    with:
+      name: devel
