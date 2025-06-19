@@ -58,7 +58,7 @@ x86_64_CFLAGS  := -mcmodel=small -march=nocona -mtune=core-avx2 -mfpmath=sse
 
 CFLAGS  = -O2 -fwrapv -fno-strict-aliasing
 CFLAGS += -ffunction-sections -fdata-sections -fno-omit-frame-pointer
-CFLAGS += -ffile-prefix-map=$(CCACHE_BASEDIR)=.
+CFLAGS += $(DEBUG_FLAGS) -s $(OPTIMIZE_FLAGS) $(SANITY_FLAGS) -ffile-prefix-map=$(CCACHE_BASEDIR)=.
 
 ifneq ($(SUPPRESS_WARNINGS),)
 	CFLAGS += -w
