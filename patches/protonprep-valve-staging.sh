@@ -290,12 +290,6 @@
     echo "WINE: -CUSTOM- Fix a crash in ID2D1DeviceContext if no target is set"
     patch -Np1 < ../patches/proton/fix-a-crash-in-ID2D1DeviceContext-if-no-target-is-set.patch
 
-    # https://gitlab.winehq.org/wine/wine/-/merge_requests/7238
-    echo "WINE: -CUSTOM- Add enhanced dualsense patches"
-    patch -Np1 < ../patches/proton/dualsense/0001-mmdevapi-correctly-read-and-write-containerid-as-cls.patch
-    patch -Np1 < ../patches/proton/dualsense/0002-containerid-helper-to-generate-a-containerid-from-a-.patch
-    patch -Np1 < ../patches/proton/dualsense/0003-Implement-SetupDiGetDeviceInterfacePropertyW-for-DEV.patch
-
     echo "WINE: -CUSTOM- wine wayland"
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0001-use-surfaceless-for-GST.patch
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0002-winewayland-Enable-disable-the-zwp_text_input_v3-obj.patch
