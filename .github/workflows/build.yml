@@ -29,12 +29,12 @@ jobs:
       with:
         fetch-depth: 0
         fetch-tags: true
-        submodules: false
+        submodules: recursive #false
 
     - name: Patch
       run: |
-        git submodule sync
-        git submodule update --init --filter=tree:0 --recursive
+        #git submodule sync
+        #git submodule update --init --filter=tree:0 --recursive
         # apply proton-ge-custom patches
         ./patches/protonprep-valve-staging.sh || true
         # strip binaries at compile time to save space in the runner
