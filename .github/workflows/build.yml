@@ -35,6 +35,7 @@ jobs:
       run: |
         #git submodule sync
         #git submodule update --init --filter=tree:0 --recursive
+        git submodule deinit -f .
         git submodule update --init --recursive
         # apply proton-ge-custom patches
         ./patches/protonprep-valve-staging.sh || true
