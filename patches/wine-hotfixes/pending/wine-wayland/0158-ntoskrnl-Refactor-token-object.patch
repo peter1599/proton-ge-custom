@@ -1,0 +1,90 @@
+From 9d0dd2f50a13f683fbda8542e4d892a0200efa65 Mon Sep 17 00:00:00 2001
+From: Etaash Mathamsetty
+ <45927311+Etaash-mathamsetty@users.noreply.github.com>
+Date: Wed, 25 Jun 2025 11:51:25 -0400
+Subject: [PATCH 158/163] ntoskrnl: Refactor token object.
+
+---
+ dlls/ntoskrnl.exe/instr.c    | 17 +++++++++++++++--
+ dlls/ntoskrnl.exe/ntoskrnl.c |  2 +-
+ include/winnt.h              |  6 +++---
+ 3 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/dlls/ntoskrnl.exe/instr.c b/dlls/ntoskrnl.exe/instr.c
+index d7d1b9a51ec..fdf9fc4893f 100644
+--- a/dlls/ntoskrnl.exe/instr.c
++++ b/dlls/ntoskrnl.exe/instr.c
+@@ -22,6 +22,7 @@
+  */
+ 
+ #include <stdarg.h>
++#include <stdlib.h>
+ 
+ #include "windef.h"
+ #include "winbase.h"
+@@ -930,15 +931,27 @@ static DWORD emulate_instruction( EXCEPTION_RECORD *rec, CONTEXT *context )
+     case 0xed: /* inl eAX, DX */
+     {
+         /* some anti-cheats use this instruction to detect a VM. */
++        const char envA[] = {0x53,0x74,0x65,0x61,0x6D,0x47,0x61,0x6D,0x65,0x49,0x64,0};
++        const char comp1[] = {0x31,0x32,0x38,0x32,0x32,0x37,0x30,0};
++        const char comp2[] = {0x33,0x35,0x31,0x33,0x33,0x35,0x30,0};
++
++        static const char *env;
+         WORD port = context->Rdx & 0xffff;
+ 
++        TRACE("port=%x\n", port);
++
++        if (!env) env = getenv(envA);
++
+         switch (port)
+         {
+             /* we are not a VM! */
+             case VMW_PORT:
+                 context->Rax = 0;
+-                context->Rbx = 0;
+-                context->Rcx = 0;
++                if (!strcmp(env, comp1) || !strcmp(env, comp2))
++                {
++                    context->Rbx = 0;
++                    context->Rcx = 0;
++                }
+                 context->Rip += prefixlen + 1;
+                 return ExceptionContinueExecution;
+             default:
+diff --git a/dlls/ntoskrnl.exe/ntoskrnl.c b/dlls/ntoskrnl.exe/ntoskrnl.c
+index 2c538bf25e6..d93464a8197 100644
+--- a/dlls/ntoskrnl.exe/ntoskrnl.c
++++ b/dlls/ntoskrnl.exe/ntoskrnl.c
+@@ -2463,7 +2463,7 @@ NTSTATUS WINAPI FsRtlRegisterUncProvider(PHANDLE MupHandle, PUNICODE_STRING Redi
+ 
+ static void *create_token_object( HANDLE handle )
+ {
+-    TOKEN *token;
++    TOKEN_OBJECT *token;
+ 
+     if (!(token = alloc_kernel_object( SeTokenObjectType, handle, sizeof(*token), 0 ))) return NULL;
+ 
+diff --git a/include/winnt.h b/include/winnt.h
+index 1d2a90f6b56..4e9635ce885 100644
+--- a/include/winnt.h
++++ b/include/winnt.h
+@@ -4185,12 +4185,12 @@ typedef struct tagMESSAGE_RESOURCE_DATA {
+ #define ANYSIZE_ARRAY   1
+ 
+ /* generic token object. Not windows compatible fs */
+-typedef struct _TOKEN
++typedef struct _TOKEN_OBJECT
+ {
+     HANDLE handle;
+-} TOKEN, *PTOKEN;
++} TOKEN_OBJECT, *PTOKEN_OBJECT;
+ 
+-typedef PTOKEN PACCESS_TOKEN;
++typedef PTOKEN_OBJECT PACCESS_TOKEN;
+ 
+ /* FIXME:  Orphan.  What does it point to? */
+ typedef PVOID PSECURITY_DESCRIPTOR;
+-- 
+2.49.0
+
