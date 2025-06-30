@@ -27,4 +27,4 @@ jobs:
     name: Build
     uses: ./.github/workflows/build.yml
     with:
-      name: ${{ needs.checkout.outputs.version }}
+      name: ${{ format('{0} - NTSYNC', needs.checkout.outputs.version) }}
