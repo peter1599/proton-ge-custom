@@ -290,6 +290,9 @@
     echo "WINE: -CUSTOM- Fix a crash in ID2D1DeviceContext if no target is set"
     patch -Np1 < ../patches/proton/fix-a-crash-in-ID2D1DeviceContext-if-no-target-is-set.patch
 
+    echo "WINE: -CUSTOM- wine ntsync"
+    patch -Np1 < ../patches/wine-hotfixes/proton10-ntsync.patch
+
     echo "WINE: -CUSTOM- wine wayland"
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0001-use-surfaceless-for-GST.patch
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0002-winewayland-Enable-disable-the-zwp_text_input_v3-obj.patch
