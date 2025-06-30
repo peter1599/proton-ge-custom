@@ -23,8 +23,8 @@ index 3074f7c72ea..ec3aff489a5 100644
  
      return do_esync_cached;
  #else
-diff --git a/dlls/ntdll/unix/fsync.c b/dlls/ntdll/unix/fsync.c
-index ebd71ea3b7c..beebe520e4c 100644
+#diff --git a/dlls/ntdll/unix/fsync.c b/dlls/ntdll/unix/fsync.c
+#index ebd71ea3b7c..beebe520e4c 100644
 --- a/dlls/ntdll/unix/fsync.c
 +++ b/dlls/ntdll/unix/fsync.c
 @@ -171,7 +171,7 @@ int do_fsync(void)
@@ -49,8 +49,8 @@ index a5164435ed6..d6057d1a45c 100644
  
      return do_esync_cached;
  #else
-diff --git a/server/fsync.c b/server/fsync.c
-index dc50aa0a1f3..b83cdc10a51 100644
+#diff --git a/server/fsync.c b/server/fsync.c
+#index dc50aa0a1f3..b83cdc10a51 100644
 --- a/server/fsync.c
 +++ b/server/fsync.c
 @@ -59,7 +59,7 @@ int do_fsync(void)
