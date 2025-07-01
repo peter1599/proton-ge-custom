@@ -452,6 +452,7 @@
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0162-HACK-win32u-Place-windows-on-the-vscreen.patch
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0163-HACK-winewayland-Always-create-a-new-client-surface-.patch
     patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/ac97b117bd8fb3bd6b08d48d8808471189c1e9d5.patch
+    patch -Np1 < ../patches/wine-hotfixes/pending/wine-wayland/0164-fixup-flickering.patch
 
     echo "WINE: -CUSTOM- General fixes to help meet certain Anti-cheat engines' requirements"
     # https://gitlab.winehq.org/wine/wine-staging/-/commit/d88d44f1d9d94cb11aff9e2f0ce37d0d67fe1e95
