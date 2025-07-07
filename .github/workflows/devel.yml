@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.read_version.outputs.version }}
+      commitid: ${{ steps.commit.outputs.sha_short }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,9 +24,14 @@ jobs:
           version=$(cat VERSION)
           echo "version=$version" >> $GITHUB_OUTPUT
 
+      - name: Get short commit SHA
+        id: commit
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
   build:
     needs: checkout
     name: Build
     uses: ./.github/workflows/build.yml
     with:
-      name: ${{ format('{0}-NTSYNC', needs.checkout.outputs.version) }}
+      name: ${{ format('{0}-NTSYNC-{1}', needs.checkout.outputs.version, needs.checkout.outputs.commitid) }}
