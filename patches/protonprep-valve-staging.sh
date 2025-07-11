@@ -291,9 +291,6 @@ apply_all_in_dir() {
     echo "WINE: -CUSTOM- Fix a crash in ID2D1DeviceContext if no target is set"
     apply_patch "../patches/proton/fix-a-crash-in-ID2D1DeviceContext-if-no-target-is-set.patch"
 
-    echo "WINE: -CUSTOM- wine ntsync"
-    apply_patch "../patches/wine-hotfixes/proton10-ntsync.patch"
-
     echo "WINE: -CUSTOM- ETASSH WINE-WAYLAND+ PATCHES"
     apply_all_in_dir "../patches/wine-hotfixes/wine-wayland/"
 
