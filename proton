@@ -42,7 +42,7 @@ from pathlib import Path
 #To enable debug logging, copy "user_settings.sample.py" to "user_settings.py"
 #and edit it if needed.
 
-CURRENT_PREFIX_VERSION="GE-Proton10-8"
+CURRENT_PREFIX_VERSION="GE-Proton10-9"
 
 PFX="Proton: "
 ld_path_var = "LD_LIBRARY_PATH"
@@ -404,24 +404,8 @@ def setup_dir_drive(compat_option, drive_name, dest_dir):
         elif file_exists(drive_path, follow_symlinks=False):
             os.remove(drive_path)
 
-def is_directory_empty(dir_path):
-    # Check if the directory is empty
-    return not any(os.scandir(dir_path))
-
 def setup_game_dir_drive():
-        if os.environ.get('UMU_ID', ''):
-            drive_map = {
-                "/media": "u:",
-                "/run/media": "v:",
-                "/mnt": "w:",
-                os.path.expanduser("~"): "x:"  # Current user's home directory
-            }
-
-            for directory in drive_map.keys():
-                if os.path.exists(directory) and not is_directory_empty(directory):
-                    setup_dir_drive("gamedrive", drive_map[directory], directory)
-        else:
-            setup_dir_drive("gamedrive", "s:", try_get_game_library_dir())
+        setup_dir_drive("gamedrive", "s:", try_get_game_library_dir())
 
 def setup_steam_dir_drive():
         setup_dir_drive("steamdrive", "t:", try_get_steam_dir())
@@ -1491,6 +1475,11 @@ def default_compat_config():
         appid = os.environ["STEAM_COMPAT_APP_ID"]
 
         if appid in [
+                "3513350", #Wuthering Waves
+                ]:
+            ret.add("noxalia")
+
+        if appid in [
                 "255960", #Bad Mojo Redux
                 ]:
             ret.add("gamedrive")
@@ -1701,6 +1690,7 @@ class Session:
         self.check_environment("PROTON_ENABLE_WAYLAND", "enablewayland")
         self.check_environment("PROTON_ENABLE_HDR", "enablehdr")
         self.check_environment("PROTON_PREFER_SDL", "sdlinput")
+        self.check_environment("PROTON_NO_STEAMINPUT", "sdlinput")
         self.check_environment("PROTON_DXVK_D3D8", "dxvkd3d8")
         self.check_environment("PROTON_NO_D3D11", "nod3d11")
         self.check_environment("PROTON_NO_D3D10", "nod3d10")
@@ -1884,9 +1874,12 @@ class Session:
             self.env["WINE_DISABLE_VULKAN_OPWR"] = "1"
 
         if "PROTON_USE_XALIA" not in self.env:
-            self.env["PROTON_USE_XALIA"] = "1"
-            if "xalia" not in self.compat_config:
-                self.env["XALIA_SUPPORTED_ONLY"] = "1"
+            if "noxalia" in self.compat_config:
+                self.env["PROTON_USE_XALIA"] = "0"
+            else:
+                self.env["PROTON_USE_XALIA"] = "1"
+                if "xalia" not in self.compat_config:
+                    self.env["XALIA_SUPPORTED_ONLY"] = "1"
 
         if "nohardwarescheduling" in self.compat_config and "WINE_DISABLE_HARDWARE_SCHEDULING" not in self.env:
             self.env["WINE_DISABLE_HARDWARE_SCHEDULING"] = "1"
@@ -2068,9 +2061,6 @@ if __name__ == "__main__":
 
     g_session.init_wine()
 
-    # This is needed for protonfixes
-    os.environ["PROTON_DLL_COPY"] = "*"
-
     if g_proton.missing_default_prefix():
         g_proton.make_default_prefix()
 
@@ -2078,25 +2068,8 @@ if __name__ == "__main__":
 
     import protonfixes
     protonfixes.setup(g_session.env, "PATH", ld_path_var, prepend_to_env_str)
-
-    # Allow umu clients to run winetricks verbs and be the frontend for them
-    if (
-        g_session.env.get("UMU_ID")
-        and g_session.env.get("EXE", "").endswith("winetricks")
-        and g_session.env.get("PROTON_VERB") == "waitforexitandrun"
-    ):
-        wt_verbs = " ".join(sys.argv[2:][2:])
-        g_session.env["WINE"] = g_proton.wine_bin
-        g_session.env["WINELOADER"] = g_proton.wine_bin
-        g_session.env["WINESERVER"] = g_proton.wineserver_bin
-        g_session.env["WINETRICKS_LATEST_VERSION_CHECK"] = "disabled"
-        g_session.env["LD_PRELOAD"] = ""
-
-        log(f"Running winetricks verbs in prefix: {wt_verbs}")
-        rc = subprocess.run(sys.argv[2:], check=False, env=g_session.env).returncode
-
-        sys.exit(rc)
-
+    protonfixes.setup_mount_drives(setup_dir_drive)
+    protonfixes.winetricks(g_session.env, g_proton.wine_bin, g_proton.wineserver_bin)
     protonfixes.execute()
 
     #determine mode
